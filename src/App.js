@@ -7,6 +7,8 @@ const App = () => {
   const [films, setFilms] = useState([]);
   const [chosenFilm,setChosenFilm]=useState(null);
   const [isChosen,setIsChosen]=useState(false);
+  const [favoritesList, setFavoritesList] = useState([]);
+
   const getFilmsRequest = async () => {
     const url = "https://www.swapi.tech/api/films/";
     const response = await fetch(url);
@@ -20,21 +22,41 @@ const App = () => {
     getFilmsRequest();
   }, []);
 
-  function afterChooseFile(currentFilm){
+  useEffect(() => {
+		const filmsFavorites = JSON.parse(
+			localStorage.getItem('star-wars-app-favorites')
+		);
+		if (filmsFavorites) {
+			setFavoritesList(filmsFavorites);
+		}
+	}, []);
+
+  function afterChooseFilm(currentFilm){
     setChosenFilm(currentFilm);
     setIsChosen(true);
   }
+
+  function addToFavoriteBtn(filmId){
+    const newFavoritesList = [...favoritesList, filmId];
+		setFavoritesList(newFavoritesList);
+		saveToLocalStorage(newFavoritesList);
+  }
+
+  const saveToLocalStorage = (items) => {
+		localStorage.setItem('star-wars-app-favorites', JSON.stringify(items));
+	};
+
   return (
     <div className='container-fluid movie-app'>
       <div className='row'>
         <TableOfContent
           films={films}
-          handleChooseFilm={afterChooseFile}
+          handleChooseFilm={afterChooseFilm}
         />
       </div>
-      {/* <button onClick={()=>afterChooseFile(films[2])}>try</button> */}
+
       {isChosen && (
-            <Film chosenFilm={chosenFilm}/>)}
+            <Film chosenFilm={chosenFilm}  handleFavoriteBtn={addToFavoriteBtn} listFavorites={favoritesList}/>)}
     </div>
   );
 };
