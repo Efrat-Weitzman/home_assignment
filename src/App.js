@@ -35,12 +35,22 @@ const App = () => {
     setChosenFilm(currentFilm);
     setIsChosen(true);
   }
-
+  function toggleAddOrRemove(filmId){
+    (favoritesList.indexOf(filmId)>-1)?removeFromFavorite(filmId):addToFavoriteBtn(filmId);
+  }
   function addToFavoriteBtn(filmId) {
     const newFavoritesList = [...favoritesList, filmId];
     setFavoritesList(newFavoritesList);
     saveToLocalStorage(newFavoritesList);
   }
+
+  const removeFromFavorite = (filmId) => {
+		const newFavoriteList = favoritesList.filter(
+			(favorite) => favorite !== filmId
+		);
+		setFavoritesList(newFavoriteList);
+		saveToLocalStorage(newFavoriteList);
+	};
 
   const saveToLocalStorage = (items) => {
     localStorage.setItem('star-wars-app-favorites', JSON.stringify(items));
@@ -58,7 +68,7 @@ const App = () => {
           </div>
           {isChosen && (
             <div className="col-lg-8">
-              <Film chosenFilm={chosenFilm} handleFavoriteBtn={addToFavoriteBtn} listFavorites={favoritesList} />
+              <Film chosenFilm={chosenFilm} handleFavoriteBtn={toggleAddOrRemove} listFavorites={favoritesList} />
             </div>)}
         </div>
         <div>
