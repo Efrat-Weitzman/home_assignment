@@ -8,6 +8,7 @@ const Film = (props) => {
                     <h2 className="col-lg-11">{props.chosenFilm.properties.title}</h2>
                     <button
                         className="heart-button col-lg-1"
+                        title={(props.listFavorites.indexOf(props.chosenFilm.properties.episode_id) > -1) ? 'Remove from favorites' : 'Add to favorites'}
                             onClick={() => props.handleFavoriteBtn(props.chosenFilm.properties.episode_id)}>
                         <svg
                             width='1.5em'
